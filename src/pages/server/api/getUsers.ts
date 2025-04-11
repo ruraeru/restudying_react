@@ -8,7 +8,7 @@ export interface IUser {
   updated_at: string;
 }
 
-export const getUsers = async (filters: string) => {
+export const getUsers = async (filters?: string) => {
   const res = await axios.get("http://localhost:3001/api/users");
   // console.log("getusers api called", filters);
   return res.data.data;

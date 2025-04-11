@@ -1,4 +1,4 @@
-import { focusManager, useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { createUser, getUsers, IUser } from "./api/getUsers"
 import styled from "@emotion/styled";
 import { StyledButton } from "../../features/counter/ui/CounterButton.styles";
@@ -11,11 +11,20 @@ const UserList = styled.div`
     gap: 5px;
 `
 
+
 export default function ApiTest() {
+    const queryClient = useQueryClient();
     const { filters, setFilters } = useUserStore();
     const { data: users, isLoading } = useQuery<IUser[]>({
         queryKey: ['users', filters],
         queryFn: () => getUsers(filters)
+    });
+
+    const createUserMutation = useMutation({
+        mutationFn: createUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+        }
     });
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -34,8 +43,7 @@ export default function ApiTest() {
     }, [filters]);
 
     const onClick = () => {
-        createUser();
-        // setFilters(filters);
+        createUserMutation.mutate();
     }
     return (
         <div>

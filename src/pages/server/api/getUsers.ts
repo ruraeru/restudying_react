@@ -15,8 +15,10 @@ export const getUsers = async (filters: string) => {
 };
 
 export const createUser = async () => {
-  const res = await axios.post("http://localhost:3001/users", {
-    name: Math.random().toString(36).substring(2, 11),
-    email: `${Math.random().toString(36).substring(2, 11)}@gmail.com`,
+  const randomString = Math.random().toString(36).substring(2, 11);
+  const res = await axios.post("http://localhost:3001/api/users", {
+    username: `user_${randomString}`,
+    email: `${randomString}@gmail.com`,
+    password: "default",
   });
 };

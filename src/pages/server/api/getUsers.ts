@@ -2,8 +2,11 @@ import axios from "axios";
 
 export interface IUser {
   id: number;
-  name: string;
+  username: string;
   email: string;
+  password: string;
+  phone: string;
+  avatar: string;
   created_at: string;
   updated_at: string;
 }
@@ -21,4 +24,8 @@ export const createUser = async () => {
     email: `${randomString}@gmail.com`,
     password: "default",
   });
+};
+
+export const deleteUser = async (id: number) => {
+  const res = await axios.delete(`http://localhost:3001/api/users/${id}`);
 };

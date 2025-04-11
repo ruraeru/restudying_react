@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
-import { createUser, getUsers, IUser } from "./api/getUsers"
+import { createUser, deleteUser, getUsers, IUser } from "./api/getUsers"
 import styled from "@emotion/styled";
 import { StyledButton } from "../../features/counter/ui/CounterButton.styles";
 import { useUserStore } from "./api/store/useUserStore";
@@ -27,6 +27,13 @@ export default function ApiTest() {
         }
     });
 
+    const deleteUserMutation = useMutation({
+        mutationFn: deleteUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+        }
+    });
+
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log("submit")
@@ -45,6 +52,9 @@ export default function ApiTest() {
     const onClick = () => {
         createUserMutation.mutate();
     }
+    const onDeleteUser = (id: number) => {
+        deleteUserMutation.mutate(id);
+    }
     return (
         <div>
             <form onSubmit={onSubmit}>
@@ -54,10 +64,18 @@ export default function ApiTest() {
             <UserList>
                 {users?.map((user) => (
                     <div key={user.id}>
-                        <h1>{user.name}</h1>
+                        <h1>{user.username}</h1>
                         <p>{user.email}</p>
+                        <p>{user.avatar}</p>
+                        <p>{user.phone}</p>
+                        <p>{user.password}</p>
                         <p>{user.created_at}</p>
                         <p>{user.updated_at}</p>
+                        <div>
+                            <button onClick={() => onDeleteUser(user.id)}>
+                                X
+                            </button>
+                        </div>
                     </div>
                 ))}
             </UserList>
